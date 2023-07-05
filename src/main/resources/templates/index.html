@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css"
+            rel="stylesheet"
+    />
+</head>
+<body>
+<section style="background-color: rgb(26,23,23);">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col">
+                <div class="card card-registration my-4">
+                    <div class="row g-0">
+                        <div class="col-xl-6 d-none d-xl-block">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
+                                 alt="Sample photo" class="img-fluid"
+                                 style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="card-body p-md-5 text-black">
+                                <h3 class="mb-5 text-uppercase">Admin registration form</h3>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <input type="text" id="form3Example1m" class="form-control form-control-lg" />
+                                            <label class="form-label" for="form3Example1m">Admin NIC</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <input type="text" id="form3Example1n" class="form-control form-control-lg" />
+                                            <label class="form-label" for="form3Example1n">Admin Name</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline">
+                                            <input type="text" id="form3Example1n1" class="form-control form-control-lg" />
+                                            <label class="form-label" for="form3Example1n1">Admin UserName</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="form-outline mb-4">
+                                            <input type="text" id="form3Example8" class="form-control form-control-lg" />
+                                            <label class="form-label" for="form3Example8">Admin Password</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-outline">
+                                    <input type="text" id="form3Example1m1" class="form-control form-control-lg" />
+                                    <label class="form-label" for="form3Example1m1">Admin Addres</label>
+                                </div>
+
+
+
+                                <div class="d-flex justify-content-end pt-3">
+                                    <button onclick="singInPage()" type="button" class="btn btn-light btn-lg">Sing In</button>
+                                    <button onclick="set()" type="button" class="btn btn-warning btn-lg ms-2">Register</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function set(){
+        var nic =document.getElementById("form3Example1m").value
+        var name =document.getElementById("form3Example1n").value
+        var addres =document.getElementById("form3Example1m1").value
+        var pass =document.getElementById("form3Example8").value
+        var userName =document.getElementById("form3Example1n1").value
+
+
+       fetch('http://localhost:8080/api/v1/AdminController/adminSave', {
+           method: 'POST',
+           headers: {
+               'Content-Type': 'application/json'
+           },
+           body: JSON.stringify({
+               adminActiveState: true,
+               adminAddres: addres,
+               adminName: name,
+               adminNic: nic,
+               adminPassword: pass,
+               adminUserName: userName
+           })
+       }).then(res =>{
+
+           return res.json()
+       })
+        .then(data =>{
+                var x=JSON.stringify(data);
+                var jsonData = JSON.parse(x);
+                var code = jsonData["message"];
+                alert(JSON.stringify(code))
+                // Simulate an HTTP redirect:
+                window.location.replace("http://localhost:63342/sampleProject/templates/index.html");
+        }
+        )
+    }
+    function singInPage(){
+        window.location.replace("http://localhost:63342/sampleProject/templates/adminLogIn.html");
+    }
+</script>
+<!-- MDB -->
+<script
+        type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"
+></script>
+</body>
+</html>

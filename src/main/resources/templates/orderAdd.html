@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order ADD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body onload="getAllAdmin(),getAllCustomer(),getAllItems()">
+
+<div style="padding: 5%;background-color: rgb(26,23,23)">
+    <label style="margin-left: 45%;font-size: 50px;font-weight: bold;color: rgb(250,250,250);font-family: 'Arial Rounded MT Bold'">Add Order</label>
+    <br>
+    <select class="form-select" aria-label="Default select example" onchange="selectAdmin()" style="font-size: 30px;font-family: 'Arial Rounded MT Bold'" name="admin" id="admin">
+        <option selected disabled>Select Admin Name</option>
+    </select>
+
+    <br><br>
+    <select class="form-select" aria-label="Default select example" onchange="selectCustomer()" style="font-size: 30px;font-family: 'Arial Rounded MT Bold'" name="customer" id="customer">
+        <option selected disabled>Select Customer Name</option>
+    </select>
+
+    <br><br>
+
+    <div>
+    <select class="form-select" aria-label="Default select example" onchange="selectItem()" style="font-size: 30px;font-family: 'Arial Rounded MT Bold'" name="item" id="item">
+        <option selected disabled>Select Item Name</option>
+    </select>
+        <br>
+
+        <span style="font-size: 30px;font-family: 'Arial Rounded MT Bold';color: rgb(250,250,250)">Item Price : </span>&nbsp;
+        <label id="item_price" style="font-size: 30px;color: red; font-weight: bold"></label>&nbsp;&nbsp;&nbsp;
+
+        <span style="font-size: 30px;font-family: 'Arial Rounded MT Bold';color: rgb(250,250,250)">Stock Qty : </span>&nbsp;
+        <label id="item_qty" style="font-size: 30px;color: red; font-weight: bold"></label>&nbsp;&nbsp;&nbsp;
+
+        <br><br>
+        <span style="font-size: 30px;font-family: 'Arial Rounded MT Bold';color: rgb(250,250,250)">Buying QTY</span>
+        <input class="form-control" id="itemQty" style="font-size: 25px" type="number">
+        <br>
+        &nbsp; &nbsp;
+        <button class="btn btn-warning" onclick="addToTable()" style="font-size: 30px;width: 100%;font-family: 'Arial Rounded MT Bold'">Add</button>
+    </div>
+
+</div>
+
+<!--<div style="height: 50px;"></div>-->
+
+
+<div style="padding: 5%;">
+    <table class="table">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Item</th>
+            <th scope="col">qty</th>
+            <th scope="col">Unit Price</th>
+            <th scope="col">Amount</th>
+        </tr>
+        </thead>
+        <tbody id="itemTable" style="font-weight: bold; font-size: medium">
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-left: 70%;margin-top: 5%;padding: 2%">
+<span style="font-size: 30px;font-weight: bold;">Total Rs.</span>
+<input disabled id="total" style="font-size: 25px;font-weight: bold;color: red" type="text" value="0">
+    <br><br>
+    <button class="btn btn-success" onclick="dataToDataBase()" style="font-size: 40px; font-weight: bold;">ENTER DATA</button>
+</div>
+
+<script>
+
+    var detailsArray = [];
+
+    function getAllAdmin(){
+
+        fetch('http://localhost:8080/api/v1/AdminController/GetAllAdmin?activeStatus=true', {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+            }).then(res =>{
+
+            return res.json()
+
+        }).then(data =>{
+                    var x=JSON.stringify(data);
+                    var jsonData = JSON.parse(x);
+                    var dataCode = jsonData["data"];
+                    // alert(JSON.stringify(dataCode[0].adminName));
+
+                    var i=0;
+                    while (i < dataCode.length) {
+                        var adminName=dataCode[i].adminName;
+                        var adminId=dataCode[i].adminId;
+
+                        var x = document.getElementById("admin");
+                        var option = document.createElement("option");
+                        option.value = adminId;
+                        console.log(option.value);
+                        option.text =adminName;
+                        x.add(option);
+
+                    i++;
+                    }
+                }
+            )
+    }
+
+    function selectAdmin(){
+        var x = document.getElementById("admin").value;
+        alert(x);
+    }
+
+
+
+    function getAllCustomer(){
+
+        fetch('http://localhost:8080/api/v1/CustomerController/GetAllCustomers?activeStatus=true', {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+        }).then(res =>{
+
+            return res.json()
+
+        }).then(data =>{
+                var x=JSON.stringify(data);
+                var jsonData = JSON.parse(x);
+                var dataCode = jsonData["data"];
+                // alert(JSON.stringify(dataCode[0].adminName));
+
+                var i=0;
+                while (i < dataCode.length) {
+                    var customerName=dataCode[i].customerName;
+                    var customerId=dataCode[i].customerId;
+
+                    var x = document.getElementById("customer");
+                    var option = document.createElement("option");
+                    option.value = customerId;
+                    console.log(option.value);
+                    option.text =customerName;
+                    x.add(option);
+
+                    i++;
+                }
+            }
+        )
+    }
+
+    function selectCustomer(){
+        var x = document.getElementById("customer").value;
+        alert(x);
+    }
+
+
+    function getAllItems(){
+
+        fetch('http://localhost:8080/api/v1/ItemController/GetAllItem?activeStatus=true', {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+        }).then(res =>{
+
+            return res.json()
+
+        }).then(data =>{
+                var x=JSON.stringify(data);
+                var jsonData = JSON.parse(x);
+                var dataCode = jsonData["data"];
+                // alert(JSON.stringify(dataCode[0].adminName));
+
+                var i=0;
+                while (i < dataCode.length) {
+                    var itemName=dataCode[i].itemName;
+                    var itemId=dataCode[i].itemId;
+
+                    var x = document.getElementById("item");
+                    var option = document.createElement("option");
+                    option.value = itemId
+                    console.log(option.value);
+                    option.text =itemName;
+                    x.add(option);
+
+                    i++;
+                }
+            }
+        )
+    }
+
+    function selectItem(){
+        var x = document.getElementById("item").value;
+        fetch('http://localhost:8080/api/v1/ItemController/GetAllItemById?activeStatus=true&ItemId='+x, {
+            method: 'GET',
+            headers: {'Content-Type': 'application/json'},
+        }).then(res =>{
+
+            return res.json()
+
+        }).then(data => {
+            var x = JSON.stringify(data);
+            var jsonData = JSON.parse(x);
+            var dataCode = jsonData["data"];
+
+            document.getElementById("item_price").innerHTML=dataCode.itemSellingPrice+"     ";
+            document.getElementById("item_qty").innerHTML=dataCode.itemBalanceQty;
+
+        })
+
+    }
+
+    function addToTable(){
+
+        var e = document.getElementById("item");
+        var itemId = e.options[e.selectedIndex].value;
+        var itemName = e.options[e.selectedIndex].text;
+
+        var itemQty = document.getElementById("itemQty").value;
+        var itemPrice = document.getElementById("item_price").innerHTML;
+
+        var amount=itemPrice*itemQty;
+
+        var table = document.getElementById("itemTable");
+
+        var row = table.insertRow(0);
+
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+        var cell5 = row.insertCell(4);
+
+        cell1.innerHTML = itemId;
+        cell2.innerHTML = itemName;
+        cell3.innerHTML = itemQty;
+        cell4.innerHTML = itemPrice;
+        cell5.innerHTML = amount;
+
+
+        var priceCell = table.rows[0].cells[4].innerHTML;
+        var totalPrice=document.getElementById("total").value;
+
+        var floatPrice =parseFloat(priceCell);
+        var floatTotal =parseFloat(totalPrice);
+
+        document.getElementById("total").value=floatTotal+floatPrice;
+
+
+        detailsArray.push({"amount":priceCell,"itemName":itemName,"itemQty":itemQty,"items":itemId,"orders": 0})
+        console.log(detailsArray)
+
+
+
+        // for (var r = 0, n = table.rows.length; r < n; r++) {
+        //     for (var c = 0, m = table.rows[r].cells.length; c < m; c++) {
+        //         alert(table.rows[r].cells[4].innerHTML);
+        //     }
+        // }
+
+    }
+
+    function dataToDataBase(){
+        fetch('http://localhost:8080/api/v1/OrderController/orderSave', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "admin": document.getElementById("admin").value,
+                "customer": document.getElementById("customer").value,
+                "orderActiveState": true,
+                "orderDate": "2023-06-28T05:59:07.205Z",
+                "orderDetails": detailsArray,
+                "orderTotal":document.getElementById("total").value
+            })
+        }).then(res =>{
+
+            return res.json()
+        })
+            .then(data =>{
+                    var x=JSON.stringify(data);
+                    var jsonData = JSON.parse(x);
+                    var code = jsonData["code"];
+                    alert(JSON.stringify(code))
+
+                }
+            )
+    }
+
+</script>
+</body>
+</html>

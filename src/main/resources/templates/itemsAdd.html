@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="css/itemStyle.css"/>
+
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.css"
+            rel="stylesheet"
+    />
+</head>
+<body>
+<section class="vh-100 gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-9 col-xl-7">
+                <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                    <div class="card-body p-4 p-md-5">
+                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Items Register Form</h3>
+                        <form>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline">
+                                        <input type="text" id="itemName" class="form-control form-control-lg" />
+                                        <label class="form-label">Item Name</label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline">
+                                        <input type="text" id="itemBalanceQty" class="form-control form-control-lg" />
+                                        <label class="form-label">Item Balance Qty</label>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4 d-flex align-items-center">
+
+                                    <div class="form-outline datepicker w-100">
+                                        <input type="text" class="form-control form-control-lg" id="itemSuppliarPrice" />
+                                        <label class="form-label">Item Suppliar Price</label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-4">
+
+                                    <div class="form-outline">
+                                        <input type="text" id="itemSellingPrice" class="form-control form-control-lg" />
+                                        <label class="form-label">Item Selling Price</label>
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                    <select class="select form-control-lg" id="MesuringUnitType">
+                                        <option value="1" disabled>Choose option</option>
+                                        <option value="NUMBER">NUMBER</option>
+                                        <option value="LITTER">LITTER</option>
+                                        <option value="MILI_LITTER">MILI LITTER</option>
+                                        <option value="GRAM">GRAM</option>
+                                        <option value="MILI_GRAM">MILI GRAM</option>
+                                    </select>
+                                    <label class="form-label select-label">Mesuring Unit Type</label>
+
+                            </div>
+
+
+                            <div class="mt-4 pt-2">
+                                <button onclick="set()" class="btn btn-primary btn-lg">Add Item</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function set(){
+
+        var itemName =document.getElementById("itemName").value
+        var itemMesuringUnitType =document.getElementById("MesuringUnitType").value
+        var itemBalanceQty =document.getElementById("itemBalanceQty").value
+        var itemSuppliarPrice =document.getElementById("itemSuppliarPrice").value
+        var itemSellingPrice =document.getElementById("itemSellingPrice").value
+
+
+        fetch('http://localhost:8080/api/v1/ItemController/itemSave', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                itemName: itemName,
+                mesuringUnitType:itemMesuringUnitType,
+                itemBalanceQty: itemBalanceQty,
+                itemSuppliarPrice: itemSuppliarPrice,
+                itemSellingPrice: itemSellingPrice,
+                itemActiveState: true
+            })
+        }).then(res =>{
+
+            return res.json()
+
+        })
+            .then(data =>{
+                    var x=JSON.stringify(data);
+                    var jsonData = JSON.parse(x);
+                    var code = jsonData["data"];
+                    alert(JSON.stringify(code))
+
+                    // Simulate an HTTP redirect:
+                    // window.location.replace("http://localhost:63342/sampleProject/templates/index.html");
+                }
+            )
+    }
+</script>
+
+<script
+        type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.0/mdb.min.js"
+></script>
+</body>
+</html>
